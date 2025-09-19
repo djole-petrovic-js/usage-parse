@@ -15,6 +15,11 @@ cargo build --release
 
 ./target/release/usage-parse --log_dir=logs
 ```
+```
+cargo build --release
+
+./target/release/usage-parse --log_dir=logs --formatter=json
+```
 
 *Development*
 
@@ -22,6 +27,9 @@ To run the program during development, use this command:
 
 ```
 cargo run -- --log_dir=logs
+```
+```
+cargo run -- --log_dir=logs --formatter=json
 ```
 
 *Testing*
