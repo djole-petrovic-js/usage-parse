@@ -1,22 +1,22 @@
 /// *Try to get all files, inside of a given directory*
-/// 
-/// --- 
-/// 
+///
+/// ---
+///
 /// Method will include additional checks, such as verifying if a file name is properly encoded. Therefore, not all files are guaranteed to be included in the returned vector.
 /// Ordering of the files is also not guaranteed. So the example below does not include the .get(0) and .get(1) checks. Use sorting if ordering is needed.
-/// 
+///
 /// ---
-/// 
+///
 /// ## Arguments
-/// 
+///
 /// - `dir` - Directory to read
-/// 
+///
 /// ## Example
-/// 
+///
 /// ```
 /// // Assuming there is a logs directory, with log1.txt and log2.txt inside.
 /// let files = get_file_names("logs");
-/// 
+///
 /// assert!(!files.is_empty());
 /// assert!(files.len() == 2);
 /// ```
@@ -28,7 +28,7 @@ pub fn get_file_names(dir: &str) -> Vec<String> {
             if let Ok(entry) = entry {
                 /*
                  * into_string, on the file_name, could return an error, indicating that the file name is not in a valid utf8 format.
-                 * So just skip this for now. 
+                 * So just skip this for now.
                  */
                 let log_file = match entry.file_name().into_string() {
                     Ok(file_name) => file_name,

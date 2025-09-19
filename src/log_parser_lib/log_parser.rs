@@ -1,12 +1,12 @@
 //! A struct for parsing all URL lines in a given file, extracting usage parameters from the query strings.
-//! 
+//!
 //! Every line has this format : https://www.mysite.com/pixel.gif?o=123&v=2222&i=555
-//! 
+//!
 //! All parameters must be valid integers.
 //! Owner must exist in the URL.
 //! Other parameters are optional, and multiple of them can appear at the same time, or just one of them.
 //! In the future, consider returning the ids of the entities associated with this events (like player id, ad unit id, video id etc.)
-//! 
+//!
 //! For now, this struct only records how many times an event happend ( like video plays for example .)
 use std::collections::HashMap;
 use std::io::BufRead;

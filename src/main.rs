@@ -1,22 +1,22 @@
 //! Entry point to the program.
 //! Should correctly get CLI arguments, and successfully parse all logs.
 //! Final aggregate result must be valid, in order to do further processing correctly.
-//! 
+//!
 //! Hardcode : let number_of_workers = 5;
 //! The logs directory could potentially contain hundreds of files.
 //! In order to make this efficient, we should start n threads, depending on the CPU, and when one of the threads has finished, spawn a new one.
 //! This way, we will avoid creating hundreds of threads, and avoid bottlenecks.
 //! This should definitely be implemented at some point.
-//! 
+//!
 //! Consider a rewrite, to move all to logic to the lib and lib.rs
-mod log_parser_lib;
 mod arguments_lib;
+mod log_parser_lib;
 mod utils;
 
-use std::{collections::HashMap, thread::JoinHandle};
+use arguments_lib::cli_args::CLIArgs;
 use log_parser_lib::log_parser::LogParser;
 use log_parser_lib::owner_usage_struct::OwnerUsage;
-use arguments_lib::cli_args::CLIArgs;
+use std::{collections::HashMap, thread::JoinHandle};
 use utils::utils::get_file_names;
 
 fn main() {
@@ -44,7 +44,7 @@ fn main() {
 
     let mut log_files_iter = log_files.into_iter();
 
-    for _ in 0 .. number_of_workers {
+    for _ in 0..number_of_workers {
         match log_files_iter.next() {
             Some(log_file) => {
                 let log_file_full_path = format!("{}/{}", log_dir, log_file);
@@ -54,12 +54,14 @@ fn main() {
                     let log_parse_result = LogParser::new(&log_file_full_path);
 
                     if let Err(_) = tx_clone.send(log_parse_result.parse()) {
-                        panic!("One of the threads could not send the result through the channel. It is not safe to continue.");
+                        panic!(
+                            "One of the threads could not send the result through the channel. It is not safe to continue."
+                        );
                     }
                 });
 
                 handles.push(log_handle);
-            }, 
+            }
 
             None => {
                 break;

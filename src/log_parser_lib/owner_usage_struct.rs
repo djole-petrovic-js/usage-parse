@@ -16,9 +16,9 @@ pub struct OwnerUsage {
 impl OwnerUsage {
     #[cfg(test)]
     /// *Returns a owner usage struct, with predefined starting usages*
-    /// 
+    ///
     /// ---
-    /// 
+    ///
     /// Note: This is not only used for tests, to test the overflow when adding to the fields.
     /// Since other methods are just incrementing by 1, it would take forever to increment a field, up until the u32::MAX, to test the overflow.
     /// Refactor this if necessery.

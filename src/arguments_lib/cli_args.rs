@@ -1,5 +1,5 @@
 //! Struct for collecting all required arguments from the command line.
-//! 
+//!
 //! When adding new arguments, a new field should be added, as well as a corresponding extractor code (potentially with validation).
 #[derive(Debug)]
 pub struct CLIArgs {
@@ -8,9 +8,9 @@ pub struct CLIArgs {
 
 impl CLIArgs {
     /// *Simple utility function, for extracting the log dir*
-    /// 
-    /// --- 
-    /// 
+    ///
+    /// ---
+    ///
     /// ## Example
     ///
     /// ```
@@ -22,23 +22,23 @@ impl CLIArgs {
         &self.logs_dir
     }
     /// *Get required arguments from the command line*
-    /// 
+    ///
     /// ---
-    /// 
+    ///
     /// All required arguments must be present, and be in valid format. Leave optional as they are.
     /// Method could return `Err(String)`, if something went wrong, so make sure to check for that.
-    /// 
+    ///
     /// ---
-    /// 
+    ///
     /// ## Arguments
-    /// 
+    ///
     /// - `env_iterator` - Any iterator type, that can provide CLI arguments one by one.
-    /// 
+    ///
     /// ## Example
-    /// 
+    ///
     /// ```
     /// let cli_args = CLIArgs::build(&mut vec!["--log_dir=test_dir".to_string()].into_iter());
-    /// 
+    ///
     /// assert!(!cli_args.is_err());
     /// ```
     pub fn build(env_iterator: &mut dyn Iterator<Item = String>) -> Result<CLIArgs, String> {
@@ -50,14 +50,18 @@ impl CLIArgs {
             let arg_name = match split.next() {
                 Some(arg_name) => arg_name,
                 None => {
-                    return Err(format!("Could not extract the first part from the argument. Check your input!"));
+                    return Err(format!(
+                        "Could not extract the first part from the argument. Check your input!"
+                    ));
                 }
             };
 
             let arg_value = match split.next() {
                 Some(arg_value) => arg_value,
                 None => {
-                    return Err(format!("Could not extract the second part from the argument. Check your input!"));
+                    return Err(format!(
+                        "Could not extract the second part from the argument. Check your input!"
+                    ));
                 }
             };
 
@@ -73,12 +77,12 @@ impl CLIArgs {
         }
         // Check if any of the variables are left empty.
         if logs_dir.is_empty() {
-            return Err(format!("Logs directory parameter is missing! Check your input"));
+            return Err(format!(
+                "Logs directory parameter is missing! Check your input"
+            ));
         }
 
-        let cli_args: CLIArgs = CLIArgs {
-            logs_dir: logs_dir,
-        };
+        let cli_args: CLIArgs = CLIArgs { logs_dir: logs_dir };
 
         Ok(cli_args)
     }
@@ -90,9 +94,7 @@ mod tests {
 
     #[test]
     fn test_correct_args_builds_with_full_paths() {
-        let args_list = vec![
-            "--log_dir=test_dir".to_string()
-        ];
+        let args_list = vec!["--log_dir=test_dir".to_string()];
 
         let cli_args = CLIArgs::build(&mut args_list.into_iter()).unwrap();
 
@@ -101,9 +103,7 @@ mod tests {
 
     #[test]
     fn test_correct_args_builds_with_shortned_paths() {
-        let args_list = vec![
-            "-ld=test_dir".to_string()
-        ];
+        let args_list = vec!["-ld=test_dir".to_string()];
 
         let cli_args = CLIArgs::build(&mut args_list.into_iter()).unwrap();
 
@@ -120,9 +120,13 @@ mod tests {
         let cli_args = CLIArgs::build(&mut vec!["--log_dir".to_string()].into_iter());
 
         assert!(cli_args.is_err());
-        assert!(cli_args.unwrap_err() == "Could not extract the second part from the argument. Check your input!");
-        
-        let cli_args = CLIArgs::build(&mut vec!["--non_existant_arg=some_value".to_string()].into_iter());
+        assert!(
+            cli_args.unwrap_err()
+                == "Could not extract the second part from the argument. Check your input!"
+        );
+
+        let cli_args =
+            CLIArgs::build(&mut vec!["--non_existant_arg=some_value".to_string()].into_iter());
 
         assert!(cli_args.is_err());
         assert!(cli_args.unwrap_err() == "Unknown parameter: --non_existant_arg");
