@@ -61,8 +61,13 @@ mod tests {
 
         std::fs::File::create(&test_log_file_one_full_path).unwrap();
         std::fs::File::create(&test_log_file_two_full_path).unwrap();
-        // Setup finished, now test the function
+        // Create the instance, and immediately remove the directory and the files.
+        // If something fails below, we'll have leftover resources.
         let mut test_log_files = get_file_names(&test_log_dir);
+        
+        std::fs::remove_file(&test_log_file_one_full_path).unwrap();
+        std::fs::remove_file(&test_log_file_two_full_path).unwrap();
+        std::fs::remove_dir(test_log_dir).unwrap();
 
         test_log_files.sort();
 
@@ -70,9 +75,5 @@ mod tests {
         assert!(test_log_files.len() == 2);
         assert_eq!(test_log_files.get(0), Some(&test_log_file_one.to_string()));
         assert_eq!(test_log_files.get(1), Some(&test_log_file_two.to_string()));
-        // Tests finished. Do some cleanup.
-        std::fs::remove_file(&test_log_file_one_full_path).unwrap();
-        std::fs::remove_file(&test_log_file_two_full_path).unwrap();
-        std::fs::remove_dir(test_log_dir).unwrap();
     }
 }
