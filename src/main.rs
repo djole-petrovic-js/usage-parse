@@ -10,10 +10,12 @@
 //!
 //! Consider a rewrite, to move all to logic to the lib and lib.rs
 mod arguments_lib;
+mod formatters;
 mod log_parser_lib;
 mod utils;
 
 use arguments_lib::cli_args::CLIArgs;
+use formatters::formatter_factory::FormatterFactory;
 use log_parser_lib::log_parser::LogParser;
 use log_parser_lib::owner_usage_struct::OwnerUsage;
 use std::{collections::HashMap, thread::JoinHandle};
@@ -134,4 +136,13 @@ fn main() {
     let duration = start.elapsed();
 
     println!("Done! Finished in {:.2?} seconds", duration);
+    /*
+     * Now find the correct formatter, and print the result.
+     */
+    // This was already checked to be correct. We can safely unwrap here.
+    let formatter = FormatterFactory::resolve_formatter(&cli_args.get_formatter()).unwrap();
+    let result = formatter.format(&aggregate);
+
+    println!("OUTPUT:");
+    println!("{}", result);
 }
