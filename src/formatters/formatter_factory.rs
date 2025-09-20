@@ -21,10 +21,10 @@ impl FormatterFactory {
 
             "stdout" => Ok(Box::new(StdoutFormatter {})),
 
-            unknown_formatter => Err(String::from(format!(
+            unknown_formatter => Err(format!(
                 "Unknown formatter: {}",
                 unknown_formatter
-            ))),
+            )),
         }
     }
 }

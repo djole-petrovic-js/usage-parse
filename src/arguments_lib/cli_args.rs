@@ -71,18 +71,14 @@ impl CLIArgs {
             let arg_name = match split.next() {
                 Some(arg_name) => arg_name,
                 None => {
-                    return Err(format!(
-                        "Could not extract the first part from the argument. Check your input!"
-                    ));
+                    return Err("Could not extract the first part from the argument. Check your input!".to_string());
                 }
             };
 
             let arg_value = match split.next() {
                 Some(arg_value) => arg_value,
                 None => {
-                    return Err(format!(
-                        "Could not extract the second part from the argument. Check your input!"
-                    ));
+                    return Err("Could not extract the second part from the argument. Check your input!".to_string());
                 }
             };
 
@@ -94,10 +90,8 @@ impl CLIArgs {
                 // Optional
                 // If present, must be a known formatter
                 "--formatter" | "-fmt" => {
-                    if FormatterFactory::resolve_formatter(&arg_value).is_err() {
-                        return Err(format!(
-                            "Unknown formatter. Run the CLI with the -h, to get the list of the available formatters"
-                        ));
+                    if FormatterFactory::resolve_formatter(arg_value).is_err() {
+                        return Err("Unknown formatter. Run the CLI with the -h, to get the list of the available formatters".to_string());
                     }
 
                     formatter.clear();
@@ -111,9 +105,7 @@ impl CLIArgs {
         }
         // Check if any of the variables are left empty.
         if logs_dir.is_empty() {
-            return Err(format!(
-                "Logs directory parameter is missing! Check your input"
-            ));
+            return Err("Logs directory parameter is missing! Check your input".to_string());
         }
 
         let cli_args: CLIArgs = CLIArgs {

@@ -30,7 +30,7 @@ pub fn get_query_string(line: &String) -> Option<&str> {
             // For a url like this, https://www.mysite.com?, query string will be empty.
             // So signal that it is not correct query string.
             return if !query_string.is_empty() {
-                Some(&query_string)
+                Some(query_string)
             } else {
                 None
             };
@@ -62,12 +62,12 @@ pub fn get_query_string_parameter_value<'a>(
     let needle = (*parameter) as u8;
 
     for (index, &item) in bytes.iter().enumerate() {
-        if item == needle && bytes[index + 1] == '=' as u8 {
+        if item == needle && bytes[index + 1] == b'=' {
             let needle_index = index + 2;
             // Found the parameter, for example o= etc etc
             // now get the end of it, with the & sign, for example o=123&
             for next_item in needle_index..bytes.len() {
-                if bytes[next_item] == '&' as u8 {
+                if bytes[next_item] == b'&' {
                     return Some(&query_string[needle_index..next_item]);
                 }
             }

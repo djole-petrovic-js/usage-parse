@@ -24,25 +24,22 @@ pub fn get_file_names(dir: &str) -> Vec<String> {
     let mut files = Vec::new();
 
     if let Ok(entries) = std::fs::read_dir(dir) {
-        for entry in entries {
-            if let Ok(entry) = entry {
-                /*
-                 * into_string, on the file_name, could return an error, indicating that the file name is not in a valid utf8 format.
-                 * So just skip this for now.
-                 */
-                let log_file = match entry.file_name().into_string() {
-                    Ok(file_name) => file_name,
-                    Err(_) => {
-                        continue;
-                    }
-                };
+        for entry in entries.flatten() {
+            /*
+             * into_string, on the file_name, could return an error, indicating that the file name is not in a valid utf8 format.
+             * So just skip this for now.
+             */
+            let log_file = if let Ok(log_file) = entry.file_name().into_string() {
+                log_file
+            } else {
+                continue;
+            };
 
-                files.push(log_file);
-            }
+            files.push(log_file);
         }
     }
 
-    return files;
+    files
 }
 
 #[cfg(test)]

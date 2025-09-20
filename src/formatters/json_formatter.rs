@@ -16,45 +16,37 @@ impl Formatter for JsonFormatter {
     fn format(&self, aggregate: &HashMap<u32, OwnerUsage>) -> String {
         let mut json_output = String::new();
 
-        json_output.push_str("[");
+        json_output.push('[');
 
-        let mut iterator = aggregate.into_iter().peekable();
+        let mut iterator = aggregate.iter().peekable();
 
-        loop {
-            match iterator.next() {
-                Some((owner_id, owner_usage_hash_map)) => {
-                    let raw = format!(
-                        r#"{{
-                        "owner_id": {owner_id},
-                        "usage": {{
-                            "video_plays": {},
-                            "ad_impressions": {}
-                        }}
-                    }}"#,
-                        owner_usage_hash_map.get_video_plays(),
-                        owner_usage_hash_map.get_ad_impressions(),
-                    );
+        while let Some((owner_id, owner_usage_hash_map)) = iterator.next() {
+            let raw = format!(
+                r#"{{
+                "owner_id": {owner_id},
+                "usage": {{
+                    "video_plays": {},
+                    "ad_impressions": {}
+                }}
+            }}"#,
+                owner_usage_hash_map.get_video_plays(),
+                owner_usage_hash_map.get_ad_impressions(),
+            );
 
-                    json_output.push_str(&raw);
+            json_output.push_str(&raw);
 
-                    if iterator.peek().is_some() {
-                        json_output.push_str(&",");
-                    }
-                }
-
-                None => {
-                    break;
-                }
+            if iterator.peek().is_some() {
+                json_output.push(',');
             }
         }
 
-        json_output.push_str("]");
+        json_output.push(']');
 
         json_output
     }
 
     /// @see [`Formatter`] trait.
     fn identifier(&self) -> &'static str {
-        return "json";
+        "json"
     }
 }

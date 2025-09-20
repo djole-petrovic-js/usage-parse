@@ -77,10 +77,10 @@ impl<'a> LogParser<'a> {
         map_field: &str,
     ) -> Option<()> {
         // It's ok if the parameter is missing. Not every single log line has to contain every parameter.
-        if let Some(value) = get_query_string_parameter_value(&query_string, &parameter) {
+        if let Some(value) = get_query_string_parameter_value(query_string, parameter) {
             // At this point, the method could error.
             // Parse error should definitely be signaled.
-            if let Ok(_) = value.parse::<u32>() {
+            if value.parse::<u32>().is_ok() {
                 // map_field must be a valid one, and the addition must succeed.
                 let add_result = match map_field {
                     "video_plays" => owner_usage.add_video_plays(1),
@@ -149,7 +149,7 @@ impl<'a> LogParser<'a> {
                         }
                     };
                     // Owner is required, and must be parsed properly.
-                    let owner_id = match get_query_string_parameter_value(&query_string, &'o') {
+                    let owner_id = match get_query_string_parameter_value(query_string, &'o') {
                         Some(owner_id) => match owner_id.parse::<u32>() {
                             Ok(owner_id) => owner_id,
                             Err(error) => return Err(LogParserError::ParseIntError(error)),
@@ -162,12 +162,12 @@ impl<'a> LogParser<'a> {
                     };
 
                     let owner_usage_instance =
-                        output.entry(owner_id).or_insert(OwnerUsage::default());
+                        output.entry(owner_id).or_default();
 
                     if self
                         .increment_hash_map_field(
                             owner_usage_instance,
-                            &query_string,
+                            query_string,
                             &QueryStringParameters::resolve_query_string_parameter(
                                 &QueryStringParameters::VideoId,
                             ),
@@ -181,7 +181,7 @@ impl<'a> LogParser<'a> {
                     if self
                         .increment_hash_map_field(
                             owner_usage_instance,
-                            &query_string,
+                            query_string,
                             &QueryStringParameters::resolve_query_string_parameter(
                                 &QueryStringParameters::AdUnitId,
                             ),

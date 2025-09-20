@@ -17,35 +17,31 @@ impl Formatter for StdoutFormatter {
         let mut output = String::new();
 
         output
-            .push_str(String::from(format!("---------------------------------------\n")).as_str());
+            .push_str("---------------------------------------\n");
 
         for (owner_id, owner_usage) in aggregate {
-            output.push_str(String::from(format!("Owner with id: {}\n\n", owner_id)).as_str());
-            output.push_str(String::from(format!("Usage\n\n")).as_str());
-            output.push_str(
-                String::from(format!(
-                    "  Video plays: {}\n",
-                    owner_usage.get_video_plays()
-                ))
-                .as_str(),
-            );
-            output.push_str(
-                String::from(format!(
-                    "  Ad Impressions: {}\n",
-                    owner_usage.get_ad_impressions()
-                ))
-                .as_str(),
-            );
+            output.push_str(&format!("Owner with id: {}\n\n", owner_id));
+            output.push_str("Usage\n\n");
 
             output.push_str(
-                String::from(format!("---------------------------------------\n")).as_str(),
-            );
+                &format!(
+                    "  Video plays: {}\n",
+                    owner_usage.get_video_plays()
+                ));
+
+            output.push_str(
+                &format!(
+                    "  Ad Impressions: {}\n",
+                    owner_usage.get_ad_impressions()
+                ));
+
+            output.push_str("---------------------------------------\n");
         }
 
         output
     }
     /// @see [`Formatter`] trait.
     fn identifier(&self) -> &'static str {
-        return "stdout";
+        "stdout"
     }
 }

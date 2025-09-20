@@ -19,7 +19,7 @@ use formatters::formatter_factory::FormatterFactory;
 use log_parser_lib::log_parser::LogParser;
 use log_parser_lib::owner_usage_struct::OwnerUsage;
 use std::{collections::HashMap, thread::JoinHandle};
-use utils::utils::get_file_names;
+use utils::fs_utils::get_file_names;
 
 fn main() {
     let cli_args = CLIArgs::build(&mut std::env::args().skip(1)).unwrap_or_else(|error| {
@@ -29,7 +29,7 @@ fn main() {
     });
 
     let log_dir = cli_args.get_logs_dir();
-    let log_files = get_file_names(&log_dir);
+    let log_files = get_file_names(log_dir);
 
     if log_files.is_empty() {
         eprint!("No files found in the given dir!");
@@ -55,7 +55,7 @@ fn main() {
                 let log_handle = std::thread::spawn(move || {
                     let log_parse_result = LogParser::new(&log_file_full_path);
 
-                    if let Err(_) = tx_clone.send(log_parse_result.parse()) {
+                    if tx_clone.send(log_parse_result.parse()).is_err() {
                         panic!(
                             "One of the threads could not send the result through the channel. It is not safe to continue."
                         );
@@ -85,7 +85,7 @@ fn main() {
         match log_parser_result {
             Ok(owner_usage_hash_map) => {
                 for (owner_id, owner_usage) in owner_usage_hash_map {
-                    let entry = aggregate.entry(owner_id).or_insert(OwnerUsage::default());
+                    let entry = aggregate.entry(owner_id).or_default();
 
                     if entry
                         .add_video_plays(owner_usage.get_video_plays())
@@ -110,7 +110,7 @@ fn main() {
             }
 
             Err(error) => {
-                println!("FATAL ERROR OCCURED : {}", error.to_string());
+                println!("FATAL ERROR OCCURED : {}", error);
 
                 std::process::exit(1);
             }
@@ -140,7 +140,7 @@ fn main() {
      * Now find the correct formatter, and print the result.
      */
     // This was already checked to be correct. We can safely unwrap here.
-    let formatter = FormatterFactory::resolve_formatter(&cli_args.get_formatter()).unwrap();
+    let formatter = FormatterFactory::resolve_formatter(cli_args.get_formatter()).unwrap();
     let result = formatter.format(&aggregate);
 
     println!("OUTPUT:");
