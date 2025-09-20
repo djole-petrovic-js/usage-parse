@@ -16,24 +16,21 @@ impl Formatter for StdoutFormatter {
     fn format(&self, aggregate: &HashMap<u32, OwnerUsage>) -> String {
         let mut output = String::new();
 
-        output
-            .push_str("---------------------------------------\n");
+        output.push_str("---------------------------------------\n");
 
         for (owner_id, owner_usage) in aggregate {
             output.push_str(&format!("Owner with id: {}\n\n", owner_id));
             output.push_str("Usage\n\n");
 
-            output.push_str(
-                &format!(
-                    "  Video plays: {}\n",
-                    owner_usage.get_video_plays()
-                ));
+            output.push_str(&format!(
+                "  Video plays: {}\n",
+                owner_usage.get_video_plays()
+            ));
 
-            output.push_str(
-                &format!(
-                    "  Ad Impressions: {}\n",
-                    owner_usage.get_ad_impressions()
-                ));
+            output.push_str(&format!(
+                "  Ad Impressions: {}\n",
+                owner_usage.get_ad_impressions()
+            ));
 
             output.push_str("---------------------------------------\n");
         }

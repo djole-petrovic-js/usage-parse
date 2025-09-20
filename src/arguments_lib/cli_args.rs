@@ -71,14 +71,20 @@ impl CLIArgs {
             let arg_name = match split.next() {
                 Some(arg_name) => arg_name,
                 None => {
-                    return Err("Could not extract the first part from the argument. Check your input!".to_string());
+                    return Err(
+                        "Could not extract the first part from the argument. Check your input!"
+                            .to_string(),
+                    );
                 }
             };
 
             let arg_value = match split.next() {
                 Some(arg_value) => arg_value,
                 None => {
-                    return Err("Could not extract the second part from the argument. Check your input!".to_string());
+                    return Err(
+                        "Could not extract the second part from the argument. Check your input!"
+                            .to_string(),
+                    );
                 }
             };
 

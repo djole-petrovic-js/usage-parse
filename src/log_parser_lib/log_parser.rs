@@ -161,8 +161,7 @@ impl<'a> LogParser<'a> {
                         }
                     };
 
-                    let owner_usage_instance =
-                        output.entry(owner_id).or_default();
+                    let owner_usage_instance = output.entry(owner_id).or_default();
 
                     if self
                         .increment_hash_map_field(

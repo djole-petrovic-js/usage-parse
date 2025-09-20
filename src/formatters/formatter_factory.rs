@@ -21,10 +21,7 @@ impl FormatterFactory {
 
             "stdout" => Ok(Box::new(StdoutFormatter {})),
 
-            unknown_formatter => Err(format!(
-                "Unknown formatter: {}",
-                unknown_formatter
-            )),
+            unknown_formatter => Err(format!("Unknown formatter: {}", unknown_formatter)),
         }
     }
 }

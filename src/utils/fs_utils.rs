@@ -61,7 +61,7 @@ mod tests {
         // Create the instance, and immediately remove the directory and the files.
         // If something fails below, we'll have leftover resources.
         let mut test_log_files = get_file_names(&test_log_dir);
-        
+
         std::fs::remove_file(&test_log_file_one_full_path).unwrap();
         std::fs::remove_file(&test_log_file_two_full_path).unwrap();
         std::fs::remove_dir(test_log_dir).unwrap();
